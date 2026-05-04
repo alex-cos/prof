@@ -1,5 +1,11 @@
 # Advanced Runtime Profiling Toolkit for Go (Gin + pprof)
 
+[![Go Version](https://img.shields.io/badge/Go-1.23%2B-blue)](https://go.dev/)
+[![Test Status](https://github.com/alex-cos/prof/actions/workflows/test.yml/badge.svg)](https://github.com/alex-cos/prof/actions/workflows/test.yml)
+[![Lint Status](https://github.com/alex-cos/prof/actions/workflows/lint.yml/badge.svg)](https://github.com/alex-cos/prof/actions/workflows/lint.yml)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/alex-cos/prof)](https://goreportcard.com/report/github.com/alex-cos/prof)
+
 `prof` is a production‑grade profiling module for Go services. It exposes runtime profiling features through both:
 
 ![prof](/prof.png)
