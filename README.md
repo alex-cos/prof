@@ -146,7 +146,7 @@ pp.RunDailyCleanup(24 * time.Hour)
 
 Profile files are created using timestamped names:
 
-```
+```txt
 cpu_YYYYMMDD_HHMMSS.pprof
 heap_YYYYMMDD_HHMMSS.pprof
 goroutine_YYYYMMDD_HHMMSS.txt

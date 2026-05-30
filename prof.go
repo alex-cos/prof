@@ -137,11 +137,15 @@ func (s *Server) StartBlocking() error {
 	err := s.srv.ListenAndServe()
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		s.logError("prof ListenAndServe error", slog.String("addr", s.addr()), slog.Any("error", err))
+		s.mu.Lock()
 		s.srv = nil
+		s.mu.Unlock()
 		return err
 	}
 	s.logInfo("prof server stopped", slog.String("addr", s.addr()))
+	s.mu.Lock()
 	s.srv = nil
+	s.mu.Unlock()
 
 	return nil
 }
@@ -155,13 +159,17 @@ func (s *Server) StartNonBlocking() error {
 }
 
 func (s *Server) Stop() {
-	if s.srv == nil {
+	s.mu.Lock()
+	srv := s.srv
+	s.mu.Unlock()
+
+	if srv == nil {
 		return
 	}
 	s.logInfo("prof server shutdown requested", slog.String("addr", s.addr()))
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := s.srv.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(ctx); err != nil {
 		s.logError("error shutting down prof server", slog.String("addr", s.addr()), slog.Any("error", err))
 	}
 }
