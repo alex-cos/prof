@@ -13,7 +13,10 @@ import (
 func (s *Server) startCPUHandler(c *gin.Context) {
 	sec := 30
 	if v := c.Query("seconds"); v != "" {
-		fmt.Sscanf(v, "%d", &sec)
+		if _, err := fmt.Sscanf(v, "%d", &sec); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid seconds parameter"})
+			return
+		}
 	}
 
 	if err := s.StartCPUProfiling(sec); err != nil {
@@ -83,7 +86,10 @@ func (s *Server) goroutinesHandler(c *gin.Context) {
 func (s *Server) startBlockHandler(c *gin.Context) {
 	rate := 1
 	if v := c.Query("rate"); v != "" {
-		fmt.Sscanf(v, "%d", &rate)
+		if _, err := fmt.Sscanf(v, "%d", &rate); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid rate parameter"})
+			return
+		}
 	}
 	if err := s.StartBlockProfiling(rate); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -105,7 +111,10 @@ func (s *Server) stopBlockHandler(c *gin.Context) {
 func (s *Server) startMutexHandler(c *gin.Context) {
 	fraction := 0
 	if v := c.Query("fraction"); v != "" {
-		fmt.Sscanf(v, "%d", &fraction)
+		if _, err := fmt.Sscanf(v, "%d", &fraction); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid fraction parameter"})
+			return
+		}
 	}
 	if err := s.StartMutexProfiling(fraction); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -128,7 +137,10 @@ func (s *Server) cleanupHandler(c *gin.Context) {
 	rent := 24 * time.Hour
 	if v := c.Query("retention_hours"); v != "" {
 		var h int
-		fmt.Sscanf(v, "%d", &h)
+		if _, err := fmt.Sscanf(v, "%d", &h); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid retention_hours parameter"})
+			return
+		}
 		if h > 0 {
 			rent = time.Duration(h) * time.Hour
 		}
