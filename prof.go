@@ -17,6 +17,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	DefaultPort            = 8060
+	DefaultCPUSeconds      = 30
+	DefaultReadHeaderTimeout = 10 * time.Second
+	DefaultWriteTimeout    = time.Minute
+	DefaultIdleTimeout     = time.Minute
+	ShutdownTimeout        = 5 * time.Second
+)
+
 type Server struct {
 	host     string
 	port     int
@@ -74,7 +83,7 @@ func New(opts ...Option) *Server {
 
 	s := &Server{
 		host:           "",
-		port:           8060,
+		port:           DefaultPort,
 		srv:            nil,
 		slog:           nil,
 		isActive:       false,
@@ -115,9 +124,9 @@ func (s *Server) init() *http.Server {
 		Handler:           mux,
 		TLSConfig:         nil,
 		ReadTimeout:       0,
-		ReadHeaderTimeout: 10 * time.Second,
-		WriteTimeout:      time.Minute,
-		IdleTimeout:       time.Minute,
+		ReadHeaderTimeout: DefaultReadHeaderTimeout,
+		WriteTimeout:      DefaultWriteTimeout,
+		IdleTimeout:       DefaultIdleTimeout,
 		MaxHeaderBytes:    0,
 	}
 
@@ -167,7 +176,7 @@ func (s *Server) Stop() {
 		return
 	}
 	s.logInfo("prof server shutdown requested", slog.String("addr", s.addr()))
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), ShutdownTimeout)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		s.logError("error shutting down prof server", slog.String("addr", s.addr()), slog.Any("error", err))
@@ -188,7 +197,7 @@ func (s *Server) StartCPUProfiling(seconds int) error {
 	}
 
 	if seconds <= 0 {
-		seconds = 30
+		seconds = DefaultCPUSeconds
 	}
 
 	ts := time.Now().Format("20060102_150405")

@@ -11,7 +11,7 @@ import (
 
 // start CPU profile (auto-stop after seconds).
 func (s *Server) startCPUHandler(c *gin.Context) {
-	sec := 30
+	sec := DefaultCPUSeconds
 	if v := c.Query("seconds"); v != "" {
 		if _, err := fmt.Sscanf(v, "%d", &sec); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid seconds parameter"})
