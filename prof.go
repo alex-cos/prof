@@ -18,12 +18,12 @@ import (
 )
 
 const (
-	DefaultPort            = 8060
-	DefaultCPUSeconds      = 30
+	DefaultPort              = 8060
+	DefaultCPUSeconds        = 30
 	DefaultReadHeaderTimeout = 10 * time.Second
-	DefaultWriteTimeout    = time.Minute
-	DefaultIdleTimeout     = time.Minute
-	ShutdownTimeout        = 5 * time.Second
+	DefaultWriteTimeout      = time.Minute
+	DefaultIdleTimeout       = time.Minute
+	ShutdownTimeout          = 5 * time.Second
 )
 
 type Server struct {
